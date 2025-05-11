@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: reservation-auth
+  security:
+    oauth2:
+      authorization-server:
+        issuer-uri: http://localhost:8081
+
+logging:
+  level:
+    org.springframework.security: DEBUG

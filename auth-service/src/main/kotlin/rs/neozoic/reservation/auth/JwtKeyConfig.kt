@@ -1,4 +1,4 @@
-package rs.neozoic.reservation
+package rs.neozoic.reservation.auth
 
 import com.nimbusds.jose.jwk.JWKSet
 import com.nimbusds.jose.jwk.RSAKey

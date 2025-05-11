@@ -1,4 +1,4 @@
-package rs.neozoic.reservation
+package rs.neozoic.reservation.auth
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

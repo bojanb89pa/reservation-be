@@ -1,9 +1,8 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    id("org.springframework.boot") version "3.4.5"
-    id("io.spring.dependency-management") version "1.1.7"
-    kotlin("plugin.jpa") version "1.9.25"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.spring)
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependency.management)
 }
 
 group = "rs.neozoic.reservation"
@@ -14,7 +13,26 @@ repositories {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
+    implementation(libs.spring.boot.starter.actuator)
+
+    implementation((libs.spring.boot.starter.oauth2.authorization.server))
+    implementation((libs.spring.boot.starter.security))
+    implementation((libs.spring.boot.starter.validation))
+    implementation(libs.spring.boot.starter.web)
+
+    compileOnly(libs.lombok)
+    annotationProcessor(libs.lombok)
+
+    // Test
+    testImplementation(libs.spring.boot.starter.test)
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.spring.security.test)
+    testRuntimeOnly(libs.junit.platform.launcher)
+
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
 
 tasks.test {
