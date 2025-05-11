@@ -17,9 +17,9 @@ class ResourceServerSecurityConfig {
         return http
             .securityMatcher("/api/**")
             .authorizeHttpRequests { it
-                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+//                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                 .anyRequest().authenticated() }
-            .csrf { it.disable() }
+//            .csrf { it.disable() }
             .oauth2ResourceServer { it.jwt(Customizer. withDefaults()) }
             .exceptionHandling {
                 it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
