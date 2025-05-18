@@ -1,4 +1,4 @@
-package rs.neozoic.reservation
+package rs.neozoic.reservation.auth.api.controller
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
-import rs.neozoic.reservation.domain.dto.User
+import rs.neozoic.reservation.domain.model.User
+import rs.neozoic.reservation.domain.service.UserService
 
 @RestController
 @RequestMapping("/api/users")

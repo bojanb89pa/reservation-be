@@ -1,15 +1,27 @@
 services:
-  postgres:
+  auth-postgres:
     image: postgres:latest
-    container_name: reservations_postgres
+    container_name: auth_postgres
     environment:
-      POSTGRES_DB: reservations
+      POSTGRES_DB: reservation_auth
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data
+  resource-postgres:
+    image: postgres:latest
+    container_name: resource_postgres
+    environment:
+      POSTGRES_DB: reservation_resource
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - resource_postgres_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  auth_postgres_data:
+  resource_postgres_data:

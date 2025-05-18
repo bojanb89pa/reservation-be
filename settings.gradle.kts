@@ -13,3 +13,7 @@ include("auth-service")
 //    }
 //}
 include("resource-service")
+include("auth-service:data")
+include("domain")
+include("auth-service:api")
+include("auth-service:application")

@@ -1,4 +1,4 @@
-package rs.neozoic.reservation
+package rs.neozoic.reservation.auth
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,19 +10,17 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 
 @Configuration
-class ResourceServerSecurityConfig {
+class ApiServerSecurityConfig {
 
     @Bean
-    fun resourceServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+    fun apiServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .securityMatcher("/api/**")
-            .authorizeHttpRequests {
-                it
-//                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                    .anyRequest().authenticated()
-            }
-//            .csrf { it.disable() }
-            .oauth2ResourceServer { it.jwt(Customizer.withDefaults()) }
+            .authorizeHttpRequests { it
+                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                .anyRequest().authenticated() }
+            .csrf { it.disable() }
+            .oauth2ResourceServer { it.jwt(Customizer. withDefaults()) }
             .exceptionHandling {
                 it.authenticationEntryPoint(HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
             }

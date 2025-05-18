@@ -1,7 +1,7 @@
-package rs.neozoic.reservation.data.model.entity
+package rs.neozoic.reservation.auth.data.model.entity
 
 import jakarta.persistence.*
-import rs.neozoic.reservation.domain.dto.Role
+import rs.neozoic.reservation.domain.model.Role
 import java.time.LocalDateTime
 import java.util.*
 
@@ -30,6 +30,10 @@ data class UserEntity(
 
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "updated_at", nullable = false)
+    @Version
+    val updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(

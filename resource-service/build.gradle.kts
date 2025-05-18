@@ -17,10 +17,12 @@ repositories {
 dependencies {
 
     implementation(libs.spring.boot.starter.actuator)
-    implementation((libs.spring.boot.starter.data.jpa))
-    implementation((libs.spring.boot.starter.data.rest))
     implementation((libs.spring.boot.starter.oauth2.client))
     implementation((libs.spring.boot.starter.oauth2.resource.server))
+
+    implementation((libs.spring.boot.starter.data.jpa))
+    implementation((libs.spring.boot.starter.data.rest))
+
     implementation((libs.spring.boot.starter.security))
     implementation((libs.spring.boot.starter.validation))
     implementation(libs.spring.boot.starter.web)
@@ -32,7 +34,7 @@ dependencies {
 //    implementation("org.springframework.session:spring-session-core")
     compileOnly(libs.lombok)
     developmentOnly(libs.spring.boot.devtools)
-    developmentOnly(libs.spring.boot.docker.compose)
+//    developmentOnly(libs.spring.boot.docker.compose)
     runtimeOnly(libs.h2)
     runtimeOnly(libs.postgresql)
 //    runtimeOnly("org.springframework.modulith:spring-modulith-actuator")
