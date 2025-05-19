@@ -1,0 +1,61 @@
+[versions]
+kotlin = "1.9.25"
+spring-boot = "3.4.5"
+spring-dep-mgmt = "1.1.7"
+spring-modulith = "1.3.5"
+jackson-kotlin = "2.17.1"
+spring-security-test = "6.4.5"
+liquibase = "4.29.2"
+lombok = "1.18.38"
+h2 = "2.3.232"
+postgresql = "42.7.5"
+junit-platform = "1.11.4"
+
+
+[libraries]
+# Spring Boot Starter
+spring-boot-starter-actuator = { module = "org.springframework.boot:spring-boot-starter-actuator", version.ref = "spring-boot" }
+spring-boot-starter-data-jpa = { module = "org.springframework.boot:spring-boot-starter-data-jpa", version.ref = "spring-boot" }
+spring-boot-starter-data-rest = { module = "org.springframework.boot:spring-boot-starter-data-rest", version.ref = "spring-boot" }
+spring-boot-starter-oauth2-authorization-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-authorization-server", version.ref = "spring-boot" }
+spring-boot-starter-oauth2-client = { module = "org.springframework.boot:spring-boot-starter-oauth2-client", version.ref = "spring-boot" }
+spring-boot-starter-oauth2-resource-server = { module = "org.springframework.boot:spring-boot-starter-oauth2-resource-server", version.ref = "spring-boot" }
+spring-boot-starter-security = { module = "org.springframework.boot:spring-boot-starter-security", version.ref = "spring-boot" }
+spring-boot-starter-validation = { module = "org.springframework.boot:spring-boot-starter-validation", version.ref = "spring-boot" }
+spring-boot-starter-web = { module = "org.springframework.boot:spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-devtools = { module = "org.springframework.boot:spring-boot-devtools", version.ref = "spring-boot" }
+spring-boot-docker-compose = { module = "org.springframework.boot:spring-boot-docker-compose", version.ref = "spring-boot" }
+spring-boot-configuration-processor = { module = "org.springframework.boot:spring-boot-configuration-processor", version.ref = "spring-boot" }
+
+# Kotlin + JSON
+jackson-kotlin = { module = "com.fasterxml.jackson.module:jackson-module-kotlin", version.ref = "jackson-kotlin" }
+kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
+
+# Modulith
+spring-modulith-core = { module = "org.springframework.modulith:spring-modulith-starter-core", version.ref = "spring-modulith" }
+
+# Liquibase
+liquibase-core = { module = "org.liquibase:liquibase-core", version.ref = "liquibase" }
+
+# Lombok
+lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
+
+# Databases
+h2 = { module = "com.h2database:h2", version.ref = "h2" }
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+
+
+## Test
+# Spring Boot test
+spring-boot-starter-test = { module = "org.springframework.boot:spring-boot-starter-test", version.ref = "spring-boot" }
+kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", version.ref = "kotlin"}
+spring-security-test = { module = "org.springframework.security:spring-security-test", version = "spring-security-test" }
+# JUnit Platform
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-spring = { id = "org.jetbrains.kotlin.plugin.spring", version.ref = "kotlin" }
+kotlin-jpa = { id = "org.jetbrains.kotlin.plugin.jpa", version.ref = "kotlin" }
+spring-boot = { id = "org.springframework.boot", version.ref = "spring-boot" }
+spring-dependency-management = { id = "io.spring.dependency-management", version.ref = "spring-dep-mgmt" }
