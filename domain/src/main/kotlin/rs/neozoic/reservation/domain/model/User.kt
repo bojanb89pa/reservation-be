@@ -4,5 +4,6 @@ data class User(
     val id: String?,
     val email: String,
     val roles: Set<Role>,
-    val password: String? = null,
+    var password: String? = null,
+    var enabled: Boolean? = null
 )

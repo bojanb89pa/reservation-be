@@ -47,13 +47,4 @@ class ClientConfig {
             .build()
     }
 
-    @Bean
-    fun userDetailsService(): UserDetailsService {
-        val user = User.withUsername("admin")
-            .password(passwordEncoder().encode("admin123"))
-            .roles("USER")
-            .build()
-
-        return InMemoryUserDetailsManager(user)
-    }
 }

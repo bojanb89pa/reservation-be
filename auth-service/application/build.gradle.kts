@@ -13,6 +13,7 @@ dependencies {
     implementation(project(":domain"))
 
     implementation(libs.spring.boot.starter.web)
+    implementation(libs.spring.boot.starter.security)
 
     testImplementation(kotlin("test"))
 }

@@ -20,7 +20,7 @@ data class UserEntity(
     val email: String,
 
     @Column(name = "password", nullable = false)
-    val password: String,
+    val password: String?,
 
     @Column(name = "enabled", nullable = false)
     val enabled: Boolean,

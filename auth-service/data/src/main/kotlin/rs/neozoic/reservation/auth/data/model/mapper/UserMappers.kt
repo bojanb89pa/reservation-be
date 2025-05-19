@@ -11,13 +11,22 @@ fun UserEntity.toDomain(): User = User(
     roles = this.roles
 )
 
+
+fun UserEntity.toDomainWithDetails(): User = User(
+    id = this.publicId.toString(),
+    email = this.email,
+    roles = this.roles,
+    password = this.password,
+    enabled = this.enabled
+)
+
 fun User.toEntity(): UserEntity = UserEntity(
     id = null,
     publicId = this.id?.let {
         UUID.fromString(it)
     } ?: UUID.randomUUID(),
     email = this.email,
-    password = this.password!!, // TODO use password encoder
+    password = this.password,
     enabled = true,
     activated = false,
     roles = this.roles

@@ -2,6 +2,7 @@ package rs.neozoic.reservation.auth.data.repository.impl
 
 import org.springframework.stereotype.Repository
 import rs.neozoic.reservation.auth.data.model.mapper.toDomain
+import rs.neozoic.reservation.auth.data.model.mapper.toDomainWithDetails
 import rs.neozoic.reservation.auth.data.model.mapper.toEntity
 import rs.neozoic.reservation.auth.data.repository.jpa.UserJpaRepository
 import rs.neozoic.reservation.domain.model.User
@@ -22,6 +23,10 @@ open class UserRepositoryImpl(
 
     override fun findByEmail(email: String): User? {
         return userJpaRepository.findByEmail(email)?.toDomain()
+    }
+
+    override fun findByEmailWithDetails(email: String): User? {
+        return userJpaRepository.findByEmail(email)?.toDomainWithDetails()
     }
 
 }
