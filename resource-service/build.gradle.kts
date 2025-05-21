@@ -15,6 +15,10 @@ repositories {
 
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":resource-service:data"))
+    implementation(project(":resource-service:application"))
+    implementation(project(":resource-service:api"))
 
     implementation(libs.spring.boot.starter.actuator)
     implementation((libs.spring.boot.starter.oauth2.client))

@@ -17,3 +17,9 @@ include("auth-service:data")
 include("domain")
 include("auth-service:api")
 include("auth-service:application")
+include("resource-service:data")
+findProject(":resource-service:data")?.name = "data"
+include("resource-service:api")
+findProject(":resource-service:api")?.name = "api"
+include("resource-service:application")
+findProject(":resource-service:application")?.name = "application"

@@ -9,11 +9,11 @@ import rs.neozoic.reservation.domain.repository.UserRepository
 
 @Service
 class UserDetailsServiceImpl(
-    private val userRepository: UserRepository // interface returning UserEntity by email
+    private val userRepository: UserRepository
 ) : UserDetailsService {
 
     override fun loadUserByUsername(username: String): UserDetails {
-        val user = userRepository.findByEmailWithDetails(username)
+        val user = userRepository.findByEmailInternal(username)
             ?: throw UsernameNotFoundException("User not found with email: $username")
         return UserDetailsImpl(user)
     }

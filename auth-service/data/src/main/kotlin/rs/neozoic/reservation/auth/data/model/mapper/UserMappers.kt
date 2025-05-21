@@ -6,14 +6,14 @@ import java.util.*
 
 
 fun UserEntity.toDomain(): User = User(
-    id = this.publicId.toString(),
+    id = this.publicId,
     email = this.email,
     roles = this.roles
 )
 
 
-fun UserEntity.toDomainWithDetails(): User = User(
-    id = this.publicId.toString(),
+fun UserEntity.toDomainInternal(): User = User(
+    id = this.publicId,
     email = this.email,
     roles = this.roles,
     password = this.password,
@@ -22,9 +22,7 @@ fun UserEntity.toDomainWithDetails(): User = User(
 
 fun User.toEntity(): UserEntity = UserEntity(
     id = null,
-    publicId = this.id?.let {
-        UUID.fromString(it)
-    } ?: UUID.randomUUID(),
+    publicId = this.id ?: UUID.randomUUID(),
     email = this.email,
     password = this.password,
     enabled = true,
