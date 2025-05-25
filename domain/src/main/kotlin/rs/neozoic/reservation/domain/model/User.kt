@@ -6,6 +6,8 @@ data class User(
     val id: UUID?,
     val email: String,
     val roles: Set<Role>,
+    val firstName: String,
+    val lastName: String,
     var password: String? = null,
     var enabled: Boolean? = null
 )

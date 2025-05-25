@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001
+      author: Bojan Bogojevic
+      changes:
+        - createTable:
+            tableName: businesses
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: public_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(200)
+              - column:
+                  name: min_reservation_period
+                  type: INT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: owner_id
+                  type: UUID
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP

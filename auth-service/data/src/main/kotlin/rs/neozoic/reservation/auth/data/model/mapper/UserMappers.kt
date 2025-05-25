@@ -8,7 +8,9 @@ import java.util.*
 fun UserEntity.toDomain(): User = User(
     id = this.publicId,
     email = this.email,
-    roles = this.roles
+    roles = this.roles,
+    firstName = this.firstName,
+    lastName = this.lastName
 )
 
 
@@ -16,6 +18,8 @@ fun UserEntity.toDomainInternal(): User = User(
     id = this.publicId,
     email = this.email,
     roles = this.roles,
+    firstName = this.firstName,
+    lastName = this.lastName,
     password = this.password,
     enabled = this.enabled
 )
@@ -24,6 +28,8 @@ fun User.toEntity(): UserEntity = UserEntity(
     id = null,
     publicId = this.id ?: UUID.randomUUID(),
     email = this.email,
+    firstName = this.firstName,
+    lastName = this.lastName,
     password = this.password,
     enabled = true,
     activated = false,

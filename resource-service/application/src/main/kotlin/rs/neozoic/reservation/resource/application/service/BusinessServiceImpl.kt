@@ -14,6 +14,6 @@ class BusinessServiceImpl(
         businessRepository.createBusiness(business)
 
     override fun getBusiness(id: UUID): Business? =
-        businessRepository.getBusinessById(id)
+        businessRepository.getBusinessByPublicId(id)
 
 }

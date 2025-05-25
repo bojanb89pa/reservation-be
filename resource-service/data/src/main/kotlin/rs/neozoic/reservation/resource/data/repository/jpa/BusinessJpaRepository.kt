@@ -6,4 +6,5 @@ import java.util.*
 
 interface BusinessJpaRepository: JpaRepository<BusinessEntity, Long> {
     fun findByPublicId(publicId: UUID): BusinessEntity
+    fun existsByPublicId(publicId: UUID): Boolean
 }

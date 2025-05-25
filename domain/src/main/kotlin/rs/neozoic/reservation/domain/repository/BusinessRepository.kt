@@ -5,5 +5,6 @@ import java.util.*
 
 interface BusinessRepository {
     fun createBusiness(business: Business): Business?
-    fun getBusinessById(id: UUID): Business?
+    fun getBusinessByPublicId(publicId: UUID): Business?
+    fun existByPublicId(publicId: UUID): Boolean
 }

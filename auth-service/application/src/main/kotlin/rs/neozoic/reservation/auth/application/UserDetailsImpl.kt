@@ -17,4 +17,8 @@ class UserDetailsImpl(
     override fun isAccountNonLocked() = true
     override fun isCredentialsNonExpired() = true
     override fun isEnabled() = user.enabled ?: false
+
+    val subject = user.id
+    val email = user.email
+    val roles = user.roles
 }
