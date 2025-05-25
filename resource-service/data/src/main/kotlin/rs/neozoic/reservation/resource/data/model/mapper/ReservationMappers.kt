@@ -12,7 +12,7 @@ fun ReservationEntity.toDomain() =
         userId = this.userPublicId,
         startTime = this.startTime,
         endTime = this.endTime,
-        business = this.business.toDomain() // fetching business from db
+        businessId = this.business.publicId
     )
 
 fun Reservation.toEntity(userId: UUID, business: BusinessEntity) =

@@ -21,7 +21,6 @@ class ReservationRepositoryImpl(
     }
 
 
-    override fun getReservation(id: UUID): Reservation {
-        TODO("Not yet implemented")
-    }
+    override fun getReservation(id: UUID): Reservation =
+        reservationJpaRepository.findByPublicId(id).toDomain()
 }
