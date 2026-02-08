@@ -1,0 +1,20 @@
+@startuml
+title Clean Architecture Module Dependencies
+
+package "shared" {
+    [domain]
+}
+
+package "auth-service" {
+    [auth-api] --> [domain]
+    [auth-application] --> [domain]
+    [auth-data] --> [domain]
+}
+
+package "resource-service" {
+    [resource-api] --> [domain]
+    [resource-application] --> [domain]
+    [resource-data] --> [domain]
+}
+
+@enduml
