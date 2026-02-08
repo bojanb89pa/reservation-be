@@ -3,6 +3,9 @@ databaseChangeLog:
       id: 002
       author: Bojan Bogojevic
       changes:
+        - sql:
+            sql: CREATE EXTENSION IF NOT EXISTS btree_gist;
+
         - createTable:
             tableName: reservations
             columns:
@@ -30,17 +33,22 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: start_time
-                  type: TIMESTAMP
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
               - column:
                   name: end_time
-                  type: TIMESTAMP
+                  type: TIMESTAMPTZ
+                  constraints:
+                    nullable: false
               - column:
                   name: created_at
-                  type: TIMESTAMP
+                  type: TIMESTAMPTZ
                   defaultValueComputed: CURRENT_TIMESTAMP
+
               - column:
                   name: updated_at
-                  type: TIMESTAMP
+                  type: TIMESTAMPTZ
                   defaultValueComputed: CURRENT_TIMESTAMP
         - addForeignKeyConstraint:
             baseTableName: reservations
@@ -49,17 +57,6 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_reservations_businesses
 
-
-        - createIndex:
-            tableName: reservations
-            indexName: reservation_exclude_idx
-            indexType: gist
-            columns:
-              - column:
-                  name: business_id
-              - column:
-                  name: tsrange(start_time, end_time)
-                  type: expression
         - sql:
             splitStatements: false
             sql: |
@@ -67,5 +64,5 @@ databaseChangeLog:
               ADD CONSTRAINT no_overlapping_reservations
               EXCLUDE USING gist (
                 business_id WITH =,
-                tsrange(start_time, end_time) WITH &&
+                tstzrange(start_time, end_time) WITH &&
               );
