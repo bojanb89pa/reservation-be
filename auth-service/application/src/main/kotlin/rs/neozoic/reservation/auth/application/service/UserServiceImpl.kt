@@ -4,25 +4,25 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import rs.neozoic.reservation.domain.service.UserService
 import rs.neozoic.reservation.domain.model.User
-import rs.neozoic.reservation.domain.repository.UserRepository
+import rs.neozoic.reservation.domain.service.data.UserDataService
 
 @Service
 class UserServiceImpl(
     private val passwordEncoder: PasswordEncoder,
-    private val userRepository: UserRepository
+    private val userDataService: UserDataService
 ): UserService {
     override fun createUser(user: User): User {
-        if (userRepository.existsByEmail(user.email)) {
+        if (userDataService.existsByEmail(user.email)) {
             // TODO throw custom exception
             throw RuntimeException("User already exists")
         }
 
         user.password = passwordEncoder.encode(user.password).toString()
 
-        return userRepository.save(user)
+        return userDataService.save(user)
     }
 
     override fun getUserByEmail(email: String): User? {
-        return userRepository.findByEmail(email)
+        return userDataService.findByEmail(email)
     }
 }

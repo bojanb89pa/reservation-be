@@ -1,9 +1,9 @@
-package rs.neozoic.reservation.domain.repository
+package rs.neozoic.reservation.domain.service.data
 
 import rs.neozoic.reservation.domain.model.Reservation
 import java.util.*
 
-interface ReservationRepository {
+interface ReservationDataService {
     fun createReservation(userId: UUID, businessId: UUID, reservation: Reservation): Reservation
     fun getReservation(id: UUID): Reservation
 }
