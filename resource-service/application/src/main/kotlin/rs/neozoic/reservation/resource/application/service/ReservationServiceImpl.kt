@@ -2,15 +2,15 @@ package rs.neozoic.reservation.resource.application.service
 
 import org.springframework.stereotype.Service
 import rs.neozoic.reservation.domain.model.Reservation
-import rs.neozoic.reservation.domain.service.data.BusinessDataService
-import rs.neozoic.reservation.domain.service.data.ReservationDataService
+import rs.neozoic.reservation.domain.port.BusinessRepositoryPort
+import rs.neozoic.reservation.domain.port.ReservationRepositoryPort
 import rs.neozoic.reservation.domain.service.ReservationService
 import java.util.*
 
 @Service
 class ReservationServiceImpl(
-    private val reservationRepository: ReservationDataService,
-    private val businessRepository: BusinessDataService
+    private val reservationRepository: ReservationRepositoryPort,
+    private val businessRepository: BusinessRepositoryPort
 ) : ReservationService {
     override fun createReservation(userId: UUID, businessId: UUID, reservation: Reservation): Reservation {
         // TODO throw custom error

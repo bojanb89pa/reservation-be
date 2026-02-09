@@ -1,17 +1,17 @@
-package rs.neozoic.reservation.auth.data.service
+package rs.neozoic.reservation.auth.data.repository.adapter
 
-import org.springframework.stereotype.Service
+import org.springframework.stereotype.Repository
 import rs.neozoic.reservation.auth.data.model.mapper.toDomain
 import rs.neozoic.reservation.auth.data.model.mapper.toDomainInternal
 import rs.neozoic.reservation.auth.data.model.mapper.toEntity
 import rs.neozoic.reservation.auth.data.repository.UserRepository
 import rs.neozoic.reservation.domain.model.User
-import rs.neozoic.reservation.domain.service.data.UserDataService
+import rs.neozoic.reservation.domain.port.UserRepositoryPort
 
-@Service
-open class UserDataServiceImpl(
+@Repository
+class UserRepositoryAdapter(
     private val userRepository: UserRepository
-): UserDataService {
+): UserRepositoryPort {
     override fun save(user: User): User {
         val saved = userRepository.save(user.toEntity())
         return saved.toDomain()
