@@ -6,8 +6,8 @@ import org.springframework.security.config.Customizer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -34,7 +34,7 @@ class DefaultSecurityConfig {
     fun defaultSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
         return http
             .securityMatcher(
-                NegatedRequestMatcher(AntPathRequestMatcher("/api/**"))
+                NegatedRequestMatcher(PathPatternRequestMatcher.withDefaults().matcher("/api/**"))
             )
             .authorizeHttpRequests { it
                 .requestMatchers("/login", "/public/**", "/error").permitAll()
@@ -44,7 +44,7 @@ class DefaultSecurityConfig {
             .cors(Customizer.withDefaults())
             .csrf { csrf ->
                 csrf.ignoringRequestMatchers(
-                    AntPathRequestMatcher("/api/**")
+                    PathPatternRequestMatcher.withDefaults().matcher("/api/**")
                 )
             }
             .build()

@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.server.authorization.client.InMemoryR
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings
+import org.springframework.security.oauth2.server.authorization.settings.ClientSettings
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import java.util.*
 
@@ -38,6 +39,7 @@ class ClientConfig {
             .scope(OidcScopes.PROFILE)
             .scope("read")
             .scope("write")
+            .clientSettings(ClientSettings.builder().requireProofKey(false).build())
             .build()
 
         return InMemoryRegisteredClientRepository(client)

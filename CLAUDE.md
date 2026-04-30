@@ -64,7 +64,7 @@ Each service is split into submodules following the hexagonal pattern:
 | | |
 |---|---|
 | Language | Kotlin 1.9.25, JDK 21 |
-| Framework | Spring Boot 3.4.5 |
+| Framework | Spring Boot 4.0.6 |
 | Security | Spring Security OAuth2 / Authorization Server |
 | ORM | Spring Data JPA (Hibernate) |
 | DB | PostgreSQL 18 |
