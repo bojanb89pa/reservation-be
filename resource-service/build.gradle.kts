@@ -25,7 +25,6 @@ dependencies {
     implementation((libs.spring.boot.starter.oauth2.resource.server))
 
     implementation((libs.spring.boot.starter.data.jpa))
-    implementation((libs.spring.boot.starter.data.rest))
 
     implementation((libs.spring.boot.starter.security))
     implementation((libs.spring.boot.starter.validation))

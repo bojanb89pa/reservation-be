@@ -24,7 +24,6 @@ dependencies {
     implementation((libs.spring.boot.starter.validation))
     implementation(libs.spring.boot.starter.web)
     implementation((libs.spring.boot.starter.data.jpa))
-    implementation((libs.spring.boot.starter.data.rest))
 
     implementation(libs.jackson.kotlin)
     implementation(libs.kotlin.reflect)

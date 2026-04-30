@@ -22,6 +22,7 @@ class AuthorizationServerConfig {
             .securityMatcher(endpointsMatcher)
             .authorizeHttpRequests { it.anyRequest().authenticated() }
             .csrf { it.ignoringRequestMatchers(endpointsMatcher) }
+            .cors(Customizer.withDefaults())
             .exceptionHandling { it.authenticationEntryPoint(LoginUrlAuthenticationEntryPoint("/login")) }
             .with(authorizationServerConfigurer, Customizer.withDefaults())
             .build()

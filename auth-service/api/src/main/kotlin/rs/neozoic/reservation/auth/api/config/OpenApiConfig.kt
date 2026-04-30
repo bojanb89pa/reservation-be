@@ -3,8 +3,12 @@ package rs.neozoic.reservation.auth.api.config
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.security.OAuthFlow
+import io.swagger.v3.oas.models.security.OAuthFlows
+import io.swagger.v3.oas.models.security.Scopes
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
+import io.swagger.v3.oas.models.servers.Server
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -14,14 +18,26 @@ class OpenApiConfig {
     @Bean
     fun openApi(): OpenAPI = OpenAPI()
         .info(Info().title("Auth Service API").version("1.0"))
-        .addSecurityItem(SecurityRequirement().addList("bearerAuth"))
+        .servers(listOf(
+            Server().url("http://localhost:8081").description("Auth Service"),
+            Server().url("http://localhost:8080").description("Resource Service")
+        ))
+        .addSecurityItem(SecurityRequirement().addList("oauth2", listOf("openid", "profile")))
         .components(
             Components().addSecuritySchemes(
-                "bearerAuth",
+                "oauth2",
                 SecurityScheme()
-                    .type(SecurityScheme.Type.HTTP)
-                    .scheme("bearer")
-                    .bearerFormat("JWT")
+                    .type(SecurityScheme.Type.OAUTH2)
+                    .flows(OAuthFlows().authorizationCode(OAuthFlow()
+                        .authorizationUrl("http://localhost:8081/oauth2/authorize")
+                        .tokenUrl("http://localhost:8081/oauth2/token")
+                        .scopes(Scopes()
+                            .addString("openid", "OpenID Connect")
+                            .addString("profile", "Profile")
+                            .addString("read", "Read access")
+                            .addString("write", "Write access")
+                        )
+                    ))
             )
         )
 }
