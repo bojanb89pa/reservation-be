@@ -10,6 +10,7 @@ lombok = "1.18.38"
 h2 = "2.3.232"
 postgresql = "42.7.5"
 junit-platform = "1.11.4"
+springdoc-openapi = "2.8.3"
 
 
 [libraries]
@@ -44,6 +45,9 @@ lombok = { module = "org.projectlombok:lombok", version.ref = "lombok" }
 h2 = { module = "com.h2database:h2", version.ref = "h2" }
 postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
 
+
+# SpringDoc OpenAPI
+springdoc-openapi-starter-webmvc-ui = { module = "org.springdoc:springdoc-openapi-starter-webmvc-ui", version.ref = "springdoc-openapi" }
 
 ## Test
 # Spring Boot test

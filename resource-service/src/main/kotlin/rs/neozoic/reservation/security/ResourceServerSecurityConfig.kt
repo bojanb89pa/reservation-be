@@ -2,6 +2,7 @@ package rs.neozoic.reservation.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.annotation.Order
 import org.springframework.core.convert.converter.Converter
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
@@ -12,6 +13,16 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint
 
 @Configuration
 class ResourceServerSecurityConfig {
+
+    @Bean
+    @Order(0)
+    fun swaggerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {
+        return http
+            .securityMatcher("/swagger-ui/**", "/v3/api-docs/**")
+            .authorizeHttpRequests { it.anyRequest().permitAll() }
+            .csrf { it.disable() }
+            .build()
+    }
 
     @Bean
     fun resourceServerSecurityFilterChain(http: HttpSecurity): SecurityFilterChain {

@@ -18,6 +18,7 @@ class DefaultSecurityConfig {
                 NegatedRequestMatcher(AntPathRequestMatcher("/api/**"))
             )
             .authorizeHttpRequests { it
+                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/login", "/public/**", "/error").permitAll()
                 .anyRequest().authenticated()
             }

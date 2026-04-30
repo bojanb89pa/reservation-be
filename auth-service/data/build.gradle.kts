@@ -28,6 +28,8 @@ allOpen {
     annotation("jakarta.persistence.Embeddable")
 }
 
+tasks.bootJar { enabled = false }
+
 tasks.test {
     useJUnitPlatform()
 }

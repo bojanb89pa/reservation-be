@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm")
+    alias(libs.plugins.kotlin.spring)
 }
 
 group = "rs.neozoic.reservation"
@@ -15,6 +16,7 @@ dependencies {
     implementation(libs.spring.boot.starter.actuator)
     implementation((libs.spring.boot.starter.validation))
     implementation(libs.spring.boot.starter.web)
+    implementation(libs.springdoc.openapi.starter.webmvc.ui)
 
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
