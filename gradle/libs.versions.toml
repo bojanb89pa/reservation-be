@@ -8,6 +8,7 @@ lombok = "1.18.38"
 h2 = "2.4.240"
 postgresql = "42.7.10"
 junit-platform = "6.0.3"
+mockito-kotlin = "5.4.0"
 springdoc-openapi = "3.0.3"
 
 
@@ -54,6 +55,7 @@ kotlin-test-junit5 = { module = "org.jetbrains.kotlin:kotlin-test-junit5", versi
 spring-security-test = { module = "org.springframework.security:spring-security-test" }
 # JUnit Platform
 junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher", version.ref = "junit-platform" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockito-kotlin" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
