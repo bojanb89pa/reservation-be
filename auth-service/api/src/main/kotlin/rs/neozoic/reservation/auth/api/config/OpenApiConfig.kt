@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.security.OAuthFlows
 import io.swagger.v3.oas.models.security.Scopes
 import io.swagger.v3.oas.models.security.SecurityRequirement
 import io.swagger.v3.oas.models.security.SecurityScheme
-import io.swagger.v3.oas.models.servers.Server
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
@@ -18,10 +17,6 @@ class OpenApiConfig {
     @Bean
     fun openApi(): OpenAPI = OpenAPI()
         .info(Info().title("Auth Service API").version("1.0"))
-        .servers(listOf(
-            Server().url("http://localhost:8081").description("Auth Service"),
-            Server().url("http://localhost:8080").description("Resource Service")
-        ))
         .addSecurityItem(SecurityRequirement().addList("oauth2", listOf("openid", "profile")))
         .components(
             Components().addSecuritySchemes(
