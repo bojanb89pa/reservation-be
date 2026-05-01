@@ -1,4 +1,4 @@
-package rs.neozoic.reservation.resource.application.service
+package rs.neozoic.reservation.resource.application.usecase.reservation
 
 import org.mockito.kotlin.any
 import org.mockito.kotlin.mock
@@ -14,11 +14,11 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class ReservationServiceImplTest {
+class CreateReservationUseCaseTest {
 
     private val reservationRepository: ReservationRepositoryPort = mock()
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val reservationService = ReservationServiceImpl(reservationRepository, businessRepository)
+    private val createReservationUseCase = CreateReservationUseCase(reservationRepository, businessRepository)
 
     private fun reservation(
         id: UUID? = null,
@@ -33,7 +33,7 @@ class ReservationServiceImplTest {
     )
 
     @Test
-    fun `createReservation saves reservation when business exists`() {
+    fun `execute saves reservation when business exists`() {
         val userId = UUID.randomUUID()
         val businessId = UUID.randomUUID()
         val input = reservation(userId = userId, businessId = businessId)
@@ -42,7 +42,7 @@ class ReservationServiceImplTest {
         whenever(businessRepository.existByPublicId(businessId)).thenReturn(true)
         whenever(reservationRepository.createReservation(userId, businessId, input)).thenReturn(saved)
 
-        val result = reservationService.createReservation(userId, businessId, input)
+        val result = createReservationUseCase(userId, businessId, input)
 
         assertEquals(saved, result)
         verify(businessRepository).existByPublicId(businessId)
@@ -50,7 +50,7 @@ class ReservationServiceImplTest {
     }
 
     @Test
-    fun `createReservation throws IllegalArgumentException when business not found`() {
+    fun `execute throws IllegalArgumentException when business not found`() {
         val userId = UUID.randomUUID()
         val businessId = UUID.randomUUID()
         val input = reservation(userId = userId, businessId = businessId)
@@ -58,21 +58,9 @@ class ReservationServiceImplTest {
         whenever(businessRepository.existByPublicId(businessId)).thenReturn(false)
 
         assertFailsWith<IllegalArgumentException> {
-            reservationService.createReservation(userId, businessId, input)
+            createReservationUseCase(userId, businessId, input)
         }
 
         verify(reservationRepository, never()).createReservation(any(), any(), any())
-    }
-
-    @Test
-    fun `getReservation delegates to repository and returns result`() {
-        val id = UUID.randomUUID()
-        val expected = reservation(id = id)
-        whenever(reservationRepository.getReservation(id)).thenReturn(expected)
-
-        val result = reservationService.getReservation(id)
-
-        assertEquals(expected, result)
-        verify(reservationRepository).getReservation(id)
     }
 }

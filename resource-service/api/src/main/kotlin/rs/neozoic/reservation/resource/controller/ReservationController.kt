@@ -5,13 +5,15 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import rs.neozoic.reservation.domain.model.AuthenticatedUser
 import rs.neozoic.reservation.domain.model.Reservation
-import rs.neozoic.reservation.domain.service.ReservationService
+import rs.neozoic.reservation.domain.usecase.reservation.CreateReservationUseCase
+import rs.neozoic.reservation.domain.usecase.reservation.GetReservationUseCase
 import java.util.*
 
 @RestController
 @RequestMapping("/api/businesses/{businessId}/reservations")
 class ReservationController(
-    private val reservationService: ReservationService
+    private val createReservationUseCase: CreateReservationUseCase,
+    private val getReservationUseCase: GetReservationUseCase
 ) {
     @PostMapping
     fun createReservation(
@@ -19,9 +21,9 @@ class ReservationController(
         @AuthenticationPrincipal authUser: AuthenticatedUser,
         @RequestBody reservation: Reservation
     ): ResponseEntity<Reservation> =
-        ResponseEntity.ok(reservationService.createReservation(authUser.id, businessId, reservation))
+        ResponseEntity.ok(createReservationUseCase(authUser.id, businessId, reservation))
 
     @GetMapping("/{id}")
     fun getReservation(@PathVariable id: UUID): ResponseEntity<Reservation> =
-        ResponseEntity.ok(reservationService.getReservation(id))
+        ResponseEntity.ok(getReservationUseCase(id))
 }
