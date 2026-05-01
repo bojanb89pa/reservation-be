@@ -21,6 +21,13 @@ Spring Boot entry point and security configuration for the **OAuth2 Resource Ser
 - Accepts Bearer tokens issued by `auth-service`; the RSA public key is fetched from auth-service's JWK endpoint at startup only.
 - `AuthenticatedUser` (from `:domain`) is the in-process principal representation — roles come from JWT claims, not a DB lookup.
 
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
+
+## Unit Tests
+The root module has no unit tests. Logic that can be tested lives in `:resource-service:application`. Security configuration (`JwtToUserConverter`, `ResourceServerSecurityConfig`) is verified through integration testing or manual smoke testing against a running instance.
+
 ## What Belongs Here
 
 - `@Configuration` beans for resource server security, JWT conversion, CORS.

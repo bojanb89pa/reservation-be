@@ -48,17 +48,42 @@ class CreateUserUseCase(
 2. Add the `@Service` implementation here under `usecase/user/`.
 3. Never add a second method to an existing use case class — create a new one.
 
-## Testing
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
 
-Unit tests live in `src/test/kotlin/`. Use JUnit 5 + Mockito-Kotlin. Mock the port interface, never the adapter.
+## Unit Tests
+
+Tests live in `src/test/kotlin/` mirroring the source package path. Use **Mockito-Kotlin** with direct constructor instantiation — do not use `@ExtendWith`, `@Mock`, or `@InjectMocks`.
 
 ```kotlin
-@ExtendWith(MockitoExtension::class)
 class CreateUserUseCaseTest {
-    @Mock lateinit var userRepository: UserRepositoryPort
-    @InjectMocks lateinit var useCase: CreateUserUseCase
+    private val userRepository: UserRepositoryPort = mock()
+    private val useCase = CreateUserUseCase(userRepository)
 
     @Test
-    fun `invoke delegates to repository`() { ... }
+    fun `invoke delegates to repository and returns result`() {
+        val user = User(id = UUID.randomUUID(), email = "a@b.com")
+        whenever(userRepository.createUser(user)).thenReturn(user)
+
+        val result = useCase(user)
+
+        assertEquals(user, result)
+        verify(userRepository).createUser(user)
+    }
+
+    @Test
+    fun `invoke returns null when repository returns null`() {
+        val user = User(id = null, email = "a@b.com")
+        whenever(userRepository.createUser(user)).thenReturn(null)
+
+        assertNull(useCase(user))
+    }
 }
 ```
+
+- Imports: `kotlin.test.Test`, `kotlin.test.assertEquals`, `kotlin.test.assertNull`, `kotlin.test.assertFailsWith`
+- Mockito imports: `org.mockito.kotlin.mock`, `org.mockito.kotlin.whenever`, `org.mockito.kotlin.verify`
+- Mock **port interfaces** from `:domain/port/`, never concrete adapter classes.
+- One test class per use case. Cover: happy path, null/not-found return, and any guard clauses that throw.
+- Run a single test class: `./gradlew :auth-service:application:test --tests "FullyQualifiedClassName"`

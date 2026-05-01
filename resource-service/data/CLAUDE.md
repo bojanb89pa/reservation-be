@@ -93,6 +93,17 @@ fun BusinessEntity.toDomain() = Business(id = this.publicId, name = this.name)
 fun Business.toEntity() = BusinessEntity(publicId = this.id ?: UUID.randomUUID(), name = this.name)
 ```
 
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
+
+## Unit Tests
+`:data` adapters have no unit tests. Their correctness is validated by:
+- The mapper functions (`toDomain` / `toEntity`) which are pure Kotlin and can be tested in isolation if needed.
+- Integration tests against a real database (not yet in this project).
+
+Do not mock `JpaRepository` — if a data-layer bug is suspected, verify by running the service and inspecting the DB directly.
+
 ## Database Migrations
 
 - Liquibase changelogs in `src/main/resources/db/changelog/`.

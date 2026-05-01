@@ -65,6 +65,15 @@ class BusinessController(
 - Annotate the controller parameter with `@Valid` to trigger validation.
 - Do not write manual validation logic in the controller body.
 
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
+
+## Unit Tests
+`:api` controllers have no unit tests. Controller correctness (routing, mapping, validation) is best verified with Spring's `MockMvc` integration tests, which are not yet in this project. For now, verify controller behaviour manually via Swagger UI (`http://localhost:8080/swagger-ui/index.html`) or a REST client after running the service.
+
+Do not unit-test controllers by mocking Spring internals — the overhead is not worth it for simple delegation code.
+
 ## OpenAPI
 
 - `OpenApiConfig` configures the Swagger UI title, version, and Bearer token security scheme.

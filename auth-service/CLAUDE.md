@@ -25,6 +25,13 @@ Spring Boot entry point and security configuration for the **OAuth2 Authorizatio
 - Roles embedded by `JwtTokenCustomizer` are extracted by `resource-service`'s `JwtToUserConverter` without calling auth-service.
 - Swagger UI (`/swagger-ui/**`, `/v3/api-docs/**`) is excluded from the security filter chain via `WebSecurityCustomizer`.
 
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
+
+## Unit Tests
+The root module has no unit tests. Logic that can be tested lives in `:auth-service:application`. Security configuration is verified through integration testing or manual smoke testing against a running instance.
+
 ## What Belongs Here
 
 - `@Configuration` beans for Spring Authorization Server, security filter chains, JWT, CORS, and OAuth2 clients.

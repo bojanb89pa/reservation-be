@@ -46,17 +46,53 @@ class CreateBusinessUseCase(
 2. Add the `@Service` implementation here under `usecase/<domain>/`.
 3. Never add a second method to an existing use case class — create a new one.
 
-## Testing
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
 
-Unit tests live in `src/test/kotlin/`. Use JUnit 5 + Mockito-Kotlin. Mock the port interface, never the adapter.
+## Unit Tests
+
+Tests live in `src/test/kotlin/` mirroring the source package path. Use **Mockito-Kotlin** with direct constructor instantiation — do not use `@ExtendWith`, `@Mock`, or `@InjectMocks`.
 
 ```kotlin
-@ExtendWith(MockitoExtension::class)
 class CreateBusinessUseCaseTest {
-    @Mock lateinit var businessRepository: BusinessRepositoryPort
-    @InjectMocks lateinit var useCase: CreateBusinessUseCase
+    private val businessRepository: BusinessRepositoryPort = mock()
+    private val useCase = CreateBusinessUseCase(businessRepository)
 
     @Test
-    fun `invoke delegates to repository`() { ... }
+    fun `execute delegates to repository and returns result`() {
+        val business = Business(id = UUID.randomUUID(), name = "Salon One")
+        whenever(businessRepository.createBusiness(business)).thenReturn(business)
+
+        val result = useCase(business)
+
+        assertEquals(business, result)
+        verify(businessRepository).createBusiness(business)
+    }
+
+    @Test
+    fun `execute returns null when repository returns null`() {
+        val business = Business(id = null, name = "Salon One")
+        whenever(businessRepository.createBusiness(business)).thenReturn(null)
+
+        assertNull(useCase(business))
+    }
 }
 ```
+
+For use cases that inject multiple ports, pass all of them in the constructor:
+```kotlin
+class CreateReservationUseCaseTest {
+    private val reservationRepository: ReservationRepositoryPort = mock()
+    private val businessRepository: BusinessRepositoryPort = mock()
+    private val useCase = CreateReservationUseCase(reservationRepository, businessRepository)
+    ...
+}
+```
+
+- Imports: `kotlin.test.Test`, `kotlin.test.assertEquals`, `kotlin.test.assertNull`, `kotlin.test.assertFailsWith`
+- Mockito imports: `org.mockito.kotlin.mock`, `org.mockito.kotlin.whenever`, `org.mockito.kotlin.verify`, `org.mockito.kotlin.never`, `org.mockito.kotlin.any`
+- Mock **port interfaces** from `:domain/port/`, never concrete adapter classes.
+- One test class per use case. Cover: happy path, null/not-found return, and any guard clauses that throw.
+- Use private factory functions for repeated domain model construction (see `CreateReservationUseCaseTest`).
+- Run a single test class: `./gradlew :resource-service:application:test --tests "FullyQualifiedClassName"`

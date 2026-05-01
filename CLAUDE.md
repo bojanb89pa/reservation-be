@@ -3,6 +3,9 @@
 ## AI Workflow
 When working on a specific task, load **only this file plus the `CLAUDE.md` of the exact module you are editing**. Do not load other modules' files. Context isolation keeps each session focused and prevents architectural cross-contamination.
 
+**Never run Gradle commands automatically.** Instead, print the command for the user to run manually:
+> Run the command `{command}` and let me know if there is any issue.
+
 ## Commands
 
 ```bash
@@ -66,6 +69,34 @@ Each service owns its own PostgreSQL database — no cross-service DB calls:
 - Repository ports (in `:domain/port/`): `NounRepositoryPort` (e.g., `BusinessRepositoryPort`)
 - Repository adapters (in `:data`): `NounRepositoryAdapter` (e.g., `BusinessRepositoryAdapter`)
 - Each use case interface declares **exactly one** `operator fun invoke(...)` method
+
+## Unit Tests
+
+Unit tests live in `:application` submodules only. Use **Mockito-Kotlin** (`mock()`, `whenever`, `verify`) with direct constructor instantiation — do not use `@ExtendWith`, `@Mock`, or `@InjectMocks`.
+
+```kotlin
+class CreateBusinessUseCaseTest {
+    private val businessRepository: BusinessRepositoryPort = mock()
+    private val useCase = CreateBusinessUseCase(businessRepository)
+
+    @Test
+    fun `invoke delegates to repository and returns result`() {
+        val business = Business(id = UUID.randomUUID(), name = "Salon One")
+        whenever(businessRepository.createBusiness(business)).thenReturn(business)
+
+        val result = useCase(business)
+
+        assertEquals(business, result)
+        verify(businessRepository).createBusiness(business)
+    }
+}
+```
+
+- Use `kotlin.test.Test`, `kotlin.test.assertEquals`, `kotlin.test.assertNull`, `kotlin.test.assertFailsWith`.
+- Test file mirrors the source package path under `src/test/kotlin/`.
+- Test method names: backtick strings describing the behaviour, e.g. `` `invoke returns null when repository returns null` ``.
+- Mock **port interfaces** from `:domain/port/`, never concrete adapter classes.
+- `:domain`, `:data`, and `:api` modules have no unit tests; their logic is covered by the layers above.
 
 ## Hard Rules
 

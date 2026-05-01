@@ -6,6 +6,13 @@
 
 Shared, framework-free Kotlin library consumed by both `auth-service` and `resource-service`. Contains all domain models, use case contracts (inbound ports), and repository port contracts (outbound ports). Nothing here knows Spring exists.
 
+## Gradle Commands
+Never run Gradle commands automatically. Print the command for the user:
+> Run the command `{command}` and let me know if there is any issue.
+
+## Unit Tests
+`:domain` has no unit tests of its own. Domain logic is verified through `:application` unit tests that mock the port interfaces. Do not add test dependencies to this module.
+
 ## Hard Rules
 
 - **Zero Spring dependencies.** No `org.springframework` imports of any kind. No `@Service`, `@Entity`, `@Autowired`, `@Component`, or `@Repository`.
