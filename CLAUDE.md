@@ -1,6 +1,7 @@
-# CLAUDE.md
+# CLAUDE.md — Global Rules
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## AI Workflow
+When working on a specific task, load **only this file plus the `CLAUDE.md` of the exact module you are editing**. Do not load other modules' files. Context isolation keeps each session focused and prevents architectural cross-contamination.
 
 ## Commands
 
@@ -21,70 +22,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 docker compose up -d
 ```
 
-## Architecture
-
-This is a two-service Kotlin/Spring Boot backend using **hexagonal architecture** (ports & adapters) and **CLEAN architecture** use case pattern.
-
-### Services
-
-- **auth-service** (port 8081): User registration, authentication, JWT token issuance via Spring Authorization Server (OAuth2).
-- **resource-service** (port 8080): Business management, availability scheduling, and reservation CRUD. Acts as an OAuth2 resource server — validates JWTs issued by auth-service.
-
-Each service has its own PostgreSQL database (no cross-service DB calls):
-- `reservation_auth` on port 5433
-- `resource_resource` on port 5432
-
-### Module Layout
-
-Each service is split into submodules following the hexagonal pattern:
-
-```
-:domain                    ← shared pure-Kotlin models, use case interfaces, repository ports (no Spring)
-  model/                   ← domain models (Business, Reservation, User, …)
-  usecase/business/        ← CreateBusinessUseCase, GetBusinessUseCase (interfaces)
-  usecase/reservation/     ← CreateReservationUseCase, GetReservationUseCase (interfaces)
-  usecase/user/            ← CreateUserUseCase, GetUserByEmailUseCase (interfaces)
-  port/                    ← BusinessRepositoryPort, ReservationRepositoryPort, UserRepositoryPort
-
-:auth-service
-  :auth-service:api        ← REST controllers (Spring Web only)
-  :auth-service:application← use case implementations (usecase/user/)
-  :auth-service:data       ← JPA entities, Spring Data repos, repository adapters
-
-:resource-service
-  :resource-service:api
-  :resource-service:application← use case implementations (usecase/business/, usecase/reservation/)
-  :resource-service:data
-```
-
-**Dependency flow:** `api → application → domain (interfaces) ← data (adapters)`
-
-### Key Patterns
-
-#### Use Cases
-Every business operation is a dedicated use case class — one class, one responsibility:
-- Interfaces live in `:domain` under `usecase/<domain>/` (e.g., `CreateBusinessUseCase`, `GetBusinessUseCase`).
-- Each interface declares a single `operator fun invoke(...)` method, allowing call-site syntax like `createBusinessUseCase(business)`.
-- Implementations live in `:application` under the matching `usecase/<domain>/` package, named identically to the interface (different package). They are annotated `@Service` and use a Kotlin import alias to disambiguate: `import … CreateBusinessUseCase as CreateBusinessUseCasePort`.
-- Controllers inject individual use case interfaces — never a combined "service" interface.
-
-#### Repository Ports (Hexagonal Adapters)
-- Interfaces live in `:domain/port/` (e.g., `BusinessRepositoryPort`).
-- Implemented by `*RepositoryAdapter` classes in `:data` submodules, which delegate to Spring Data JPA repositories.
-- Use case implementations in `:application` depend only on the port interfaces — never on JPA directly.
-
-#### Other Patterns
-- **JWT flow**: auth-service signs tokens and embeds user roles as claims; resource-service's `JwtToUserConverter` extracts an `AuthenticatedUser` from the JWT without calling auth-service.
-- **Database migrations**: Liquibase, changelogs under `src/main/resources/db/changelog/` in each data submodule.
-- **Kotlin `all-open` plugin**: applied project-wide so JPA entity classes work with Kotlin's default `final` modifier.
-
-### Conventions to Follow
-
-- **New business operation** → create a new use case interface in `:domain/usecase/<domain>/` and a matching implementation class in `:application/usecase/<domain>/`. Never add methods to an existing use case.
-- **New data access** → add a method to the relevant `*RepositoryPort` in `:domain/port/` and implement it in the `*RepositoryAdapter` in `:data`.
-- **No service god-objects** — a class that handles more than one use case is a design smell.
-- **No Spring in `:domain`** — domain interfaces and models must remain framework-free.
-
 ## Tech Stack
 
 | | |
@@ -94,7 +31,47 @@ Every business operation is a dedicated use case class — one class, one respon
 | Security | Spring Security OAuth2 / Authorization Server |
 | ORM | Spring Data JPA (Hibernate) |
 | DB | PostgreSQL 18 |
-| Migrations | Liquibase |
+| Migrations | Liquibase (`src/main/resources/db/changelog/`) |
 | API Docs | SpringDoc OpenAPI (Swagger UI) |
 | Build | Gradle 8 (Kotlin DSL), version catalog at `gradle/libs.versions.toml` |
 | Testing | JUnit 5, Mockito-Kotlin (unit tests in `:application` modules) |
+
+## Architecture
+
+Hexagonal architecture (Ports & Adapters) + Clean Architecture use case pattern across two services.
+
+```
+:domain                    ← pure Kotlin, no Spring, shared by all services
+:auth-service              ← OAuth2 Authorization Server (JWT issuer), port 8081
+  :auth-service:api        ← REST controllers (inbound adapters)
+  :auth-service:application← use case implementations
+  :auth-service:data       ← JPA entities + repository adapters (outbound adapters)
+:resource-service          ← OAuth2 Resource Server (business/reservation CRUD), port 8080
+  :resource-service:api
+  :resource-service:application
+  :resource-service:data
+```
+
+**Dependency flow:** `api → application → domain (interfaces) ← data (adapters)`
+
+Each service owns its own PostgreSQL database — no cross-service DB calls:
+- `reservation_auth` on port 5433
+- `resource_resource` on port 5432
+
+## Global Naming Conventions
+
+- **One class, one responsibility.** No god objects — a class handling more than one use case is a design smell.
+- Use case interfaces (in `:domain`): `VerbNounUseCase` (e.g., `CreateBusinessUseCase`, `GetReservationUseCase`)
+- Use case implementations (in `:application`): same name, different package; use import alias to disambiguate
+- Repository ports (in `:domain/port/`): `NounRepositoryPort` (e.g., `BusinessRepositoryPort`)
+- Repository adapters (in `:data`): `NounRepositoryAdapter` (e.g., `BusinessRepositoryAdapter`)
+- Each use case interface declares **exactly one** `operator fun invoke(...)` method
+
+## Hard Rules
+
+- **No Spring in `:domain`** — zero `org.springframework` imports; pure Kotlin only.
+- **No cross-service DB calls** — each service reads and writes only its own schema.
+- **No combined service interfaces** — controllers inject individual use case interfaces, never an aggregate service.
+- **Never add methods to an existing use case** — create a new use case class instead.
+- **New business operation** → new interface in `:domain/usecase/<domain>/` + new implementation in `:application/usecase/<domain>/`.
+- **New data access** → new method on the relevant `*RepositoryPort` in `:domain/port/` + implementation in `:data`.
