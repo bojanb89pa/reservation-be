@@ -48,6 +48,12 @@ class CreateUserUseCase(
 2. Add the `@Service` implementation here under `usecase/user/`.
 3. Never add a second method to an existing use case class — create a new one.
 
+## KDoc Rules
+
+Add KDoc to use case implementation classes only when there is implementation-specific behavior not covered by the domain interface KDoc — for example: password hashing, guard clauses that throw, or side effects.
+
+Do NOT duplicate the domain interface KDoc. A one-line `/** @see domain interface */` is sufficient for pure delegation.
+
 ## Gradle Commands
 Never run Gradle commands automatically. Print the command for the user:
 > Run the command `{command}` and let me know if there is any issue.

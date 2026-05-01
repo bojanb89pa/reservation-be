@@ -98,6 +98,21 @@ class CreateBusinessUseCaseTest {
 - Mock **port interfaces** from `:domain/port/`, never concrete adapter classes.
 - `:domain`, `:data`, and `:api` modules have no unit tests; their logic is covered by the layers above.
 
+## Documentation
+
+### Structure
+- `README.md` — project overview, setup, tech stack, module summary
+- `docs/architecture.md` — hexagonal architecture, dependency flow, module boundaries
+- `docs/modules.md` — per-module responsibilities, allowed/forbidden dependencies
+- `docs/use-cases.md` — business flows and use case descriptions
+- `docs/adr/` — architecture decision records
+
+### Rules
+- **No duplication across files** — README links to docs/; docs/ does not repeat Swagger; Swagger does not repeat docs/.
+- **Swagger** — HTTP contract only: endpoint purpose, status codes, auth requirements. No architecture or business logic.
+- **KDoc** — business intent only on use case interfaces and domain models: constraints, failure scenarios, side effects. Omit trivial getters and delegation-only methods.
+- **Markdown docs** — developer-oriented, structured with bullet points, maintainability over completeness.
+
 ## Hard Rules
 
 - **No Spring in `:domain`** — zero `org.springframework` imports; pure Kotlin only.

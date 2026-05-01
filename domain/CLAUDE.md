@@ -10,6 +10,31 @@ Shared, framework-free Kotlin library consumed by both `auth-service` and `resou
 Never run Gradle commands automatically. Print the command for the user:
 > Run the command `{command}` and let me know if there is any issue.
 
+## KDoc Rules
+
+Add KDoc to every use case interface and every domain model. Focus on business intent — omit obvious descriptions.
+
+Required on:
+- Use case interfaces — document the operation contract, guards, and failure scenarios
+- Domain models — document each `@property` with its business meaning
+- Repository port methods — only when the method name alone is insufficient
+
+Template for use case interfaces:
+```kotlin
+/**
+ * [One-line description of the business operation.]
+ *
+ * @param paramName [business meaning]
+ * @return [what is returned and when]
+ * @throws SomeException [when and why]
+ */
+interface CreateXxxUseCase {
+    operator fun invoke(...): ...
+}
+```
+
+Do NOT add KDoc to: trivial `data class` fields that are self-explanatory, `constants` objects, or `enum` entries that match their name.
+
 ## Unit Tests
 `:domain` has no unit tests of its own. Domain logic is verified through `:application` unit tests that mock the port interfaces. Do not add test dependencies to this module.
 

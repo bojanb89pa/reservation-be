@@ -59,6 +59,29 @@ class UserController(
 - Annotate the controller parameter with `@Valid` to trigger validation.
 - Do not write manual validation logic in the controller body.
 
+## Swagger / OpenAPI Rules
+
+Every controller class must have `@Tag(name = "...", description = "...")`.
+Every handler method must have `@Operation(summary = "...")` — one short sentence, API-consumer oriented.
+Add `@ApiResponse` only for non-obvious status codes (errors, 404, conflict).
+The OAuth2 security scheme is declared globally in `OpenApiConfig` — do not repeat `@SecurityRequirement` on individual methods unless an endpoint deviates from the global scheme.
+
+Keep annotations concise:
+```kotlin
+@Tag(name = "Users", description = "User registration and lookup")
+@RestController
+class UserController(...) {
+
+    @Operation(summary = "Register a new user")
+    @ApiResponses(ApiResponse(responseCode = "200", description = "User registered"),
+                  ApiResponse(responseCode = "500", description = "Email already registered"))
+    @PostMapping
+    fun createUser(...): ResponseEntity<User>
+}
+```
+
+**Never put** architecture explanations, business logic, or implementation details in Swagger annotations.
+
 ## Gradle Commands
 Never run Gradle commands automatically. Print the command for the user:
 > Run the command `{command}` and let me know if there is any issue.

@@ -65,6 +65,27 @@ class BusinessController(
 - Annotate the controller parameter with `@Valid` to trigger validation.
 - Do not write manual validation logic in the controller body.
 
+## Swagger / OpenAPI Rules
+
+Every controller class must have `@Tag(name = "...", description = "...")`.
+Every handler method must have `@Operation(summary = "...")` — one short sentence, API-consumer oriented.
+Add `@ApiResponse` only for non-obvious status codes (errors, 404, conflict).
+The OAuth2 security scheme is declared globally in `OpenApiConfig` — do not repeat `@SecurityRequirement` on individual methods unless an endpoint deviates from the global scheme.
+
+Keep annotations concise:
+```kotlin
+@Tag(name = "Businesses", description = "Business management")
+@RestController
+class BusinessController(...) {
+
+    @Operation(summary = "Create a new business")
+    @PostMapping
+    fun createBusiness(...): ResponseEntity<Business>
+}
+```
+
+**Never put** architecture explanations, business logic, or implementation details in Swagger annotations.
+
 ## Gradle Commands
 Never run Gradle commands automatically. Print the command for the user:
 > Run the command `{command}` and let me know if there is any issue.

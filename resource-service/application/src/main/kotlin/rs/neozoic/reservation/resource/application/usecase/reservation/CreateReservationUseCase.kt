@@ -7,13 +7,17 @@ import rs.neozoic.reservation.domain.port.ReservationRepositoryPort
 import rs.neozoic.reservation.domain.usecase.reservation.CreateReservationUseCase as CreateReservationUseCasePort
 import java.util.UUID
 
+/**
+ * Validates business existence before delegating to the reservation repository.
+ * Throws [IllegalArgumentException] if the business is not found.
+ * TODO: replace with a typed domain exception.
+ */
 @Service
 class CreateReservationUseCase(
     private val reservationRepository: ReservationRepositoryPort,
     private val businessRepository: BusinessRepositoryPort
 ) : CreateReservationUseCasePort {
     override operator fun invoke(userId: UUID, businessId: UUID, reservation: Reservation): Reservation {
-        // TODO throw custom error
         require(businessRepository.existByPublicId(businessId)) { "Business not found" }
 
         return reservationRepository.createReservation(userId, businessId, reservation)
