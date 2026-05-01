@@ -5,133 +5,134 @@ A modular Kotlin-based Spring Boot project designed for **businesses to manage r
 * **`auth-service`** — Responsible for **authentication**, **authorization**, and **user management**.
 * **`resource-service`** — Manages **businesses**, **availability**, and **reservations**.
 
-## ✨ Features
+---
 
-* 🔐 JWT-based authentication and role-based authorization
-* 🧑‍💼 Admin and user management
-* 📅 Business availability and reservation scheduling
-* ☁️ Spring Boot + Kotlin with a **modular CLEAN architecture**
-* 🔄 PostgreSQL databases with Liquibase migrations
-* 🐳 Docker Compose support for development
+## Features
+
+* JWT-based authentication and role-based authorization
+* Admin and user management
+* Business availability and reservation scheduling
+* Spring Boot + Kotlin with **CLEAN architecture** and **hexagonal (ports & adapters)** design
+* PostgreSQL databases with Liquibase migrations
+* Docker Compose support for development
+* Swagger UI via SpringDoc OpenAPI
 
 ---
 
-## 🧱 Project Architecture
+## Project Architecture
 
-The system is organized using **modular CLEAN architecture**, where each service has three layers:
+The system follows **CLEAN architecture** combined with **hexagonal architecture** (ports & adapters). Each service is split into four submodules:
 
 ```
-📦 project-root
-├── 📂 auth-service
-│   ├── 📂 data           # Entities, JPA repositories
-│   ├── 📂 application    # Service implementations
-│   ├── 📂 api            # REST controllers, request/response models
-├── 📂 resource-service
-│   ├── 📂 data
-│   ├── 📂 application
-│   ├── 📂 api
-├── 📂 domain             # Shared domain models and interfaces (used by both services)
-├── 🐳 docker-compose.yml # Local PostgreSQL instances
+project-root/
+├── domain/              # Shared use case interfaces, repository ports, domain models
+├── auth-service/
+│   ├── api/             # REST controllers
+│   ├── application/     # Use case implementations
+│   └── data/            # JPA entities, repositories, repository adapters
+├── resource-service/
+│   ├── api/
+│   ├── application/
+│   └── data/
+└── docker-compose.yml   # Local PostgreSQL instances
 ```
 
-### 🧼 CLEAN Architecture Breakdown
+**Dependency flow:** `api → application → domain ← data`
 
-* **Domain module** (`:domain`):
+### Domain module (`:domain`)
 
-    * Contains core interfaces (e.g. repositories, services), domain models (e.g., `User`, `Reservation`, `Business`)
-    * No external dependencies — pure business logic
+* Contains **use case interfaces**, **repository port interfaces**, and **domain models** — no Spring, no JPA.
+* Use case interfaces are organized by domain under `usecase/<domain>/` (e.g., `usecase/business/`, `usecase/reservation/`, `usecase/user/`).
+* Repository port interfaces live under `port/` (e.g., `BusinessRepositoryPort`).
 
-* **Data submodule** (`auth-service:data`, `resource-service:data`):
+### Application submodule (`*:application`)
 
-    * Contains JPA entities, JPA repositories and repository implementations that implement domain interfaces
-    * Responsible for persistence layer
+* Contains **use case implementations** — one class per use case, one method (`operator fun invoke`).
+* Classes are named identically to their domain interface (e.g., `CreateBusinessUseCase`) and placed in the matching `usecase/<domain>/` package.
+* Depend only on domain interfaces — never on JPA or Spring Data directly.
 
-* **Application submodule** (`auth-service:application`, `resource-service:application`):
+### Data submodule (`*:data`)
 
-    * Contains service implementations
-    * Uses interfaces from the domain layer
+* Contains **JPA entities**, **Spring Data repositories**, and **repository adapters** that implement the domain port interfaces.
+* Adapters translate between JPA entities and domain models using mapper extension functions.
 
-* **API submodule** (`auth-service:api`, `resource-service:api`):
+### API submodule (`*:api`)
 
-    * Exposes REST controllers
+* Contains **REST controllers** that inject individual use case interfaces and delegate to them.
+* No business logic — controllers only handle HTTP concerns (request mapping, response codes).
+
+### Use Case pattern
+
+Every business operation is a dedicated use case:
+
+```
+domain/usecase/business/CreateBusinessUseCase.kt  ← interface with operator fun invoke(...)
+application/usecase/business/CreateBusinessUseCase.kt  ← @Service implementation
+```
+
+Controllers call use cases as functions thanks to `operator fun invoke`:
+
+```kotlin
+// BusinessController
+createBusinessUseCase(business)   // calls CreateBusinessUseCase.invoke(business)
+getBusinessUseCase(id)            // calls GetBusinessUseCase.invoke(id)
+```
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-* Java 17+
-* Kotlin 1.9+
-* Gradle
+* JDK 21+
 * Docker & Docker Compose
 
-### Start PostgreSQL with Docker Compose
+### Start databases
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
-### Run Auth Service
+### Run services
 
 ```bash
-./gradlew :auth-service:bootRun
+./gradlew :auth-service:bootRun      # http://localhost:8081
+./gradlew :resource-service:bootRun  # http://localhost:8080
 ```
 
-### Run Resource Service
+### API Documentation
 
-```bash
-./gradlew :resource-service:bootRun
-```
-
-Both services run independently:
-
-* `auth-service` ➜ [http://localhost:8081](http://localhost:8081)
-* `resource-service` ➜ [http://localhost:8080](http://localhost:8080)
+Swagger UI is available at:
+* auth-service: `http://localhost:8081/swagger-ui.html`
+* resource-service: `http://localhost:8080/swagger-ui.html`
 
 ---
 
-## 🔐 Authentication & Authorization
+## Authentication & Authorization
 
-* Users authenticate via **auth-service**
-* JWT tokens include `user_id`, `email`, and `roles`
-* Resource service extracts these claims via a custom JWT converter to identify the authenticated user
+* Users authenticate via **auth-service** and receive a JWT.
+* JWT tokens include `user_id`, `email`, and `roles`.
+* Resource service validates tokens and extracts the authenticated user via a custom `JwtToUserConverter` — no runtime calls to auth-service.
 
 ---
 
-## 🧪 Testing
+## Testing
 
 ```bash
-./gradlew test
+./gradlew test                        # all tests
+./gradlew :resource-service:test      # single service
 ```
+
+Unit tests cover each use case implementation in isolation using Mockito-Kotlin mocks for repository ports.
 
 ---
 
-## 📄 License
+## License
 
 This project is licensed under the [Apache 2.0 License](LICENSE).
 
 ---
 
-## 🤝 Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-
----
-
-## 📬 Contact
+## Contact
 
 Maintainer: Bojan Bogojević (bojanb89@gmail.com)
-
-Feel free to reach out with suggestions, ideas, or improvements.
-
----
-
-## ✅ TODO
-
-* [ ] Add unit/integration tests
-* [ ] Add Swagger or SpringDoc for API docs
-* [ ] Add Redis for token blacklisting (optional)
-* [ ] CI/CD pipeline with GitHub Actions
-
-
