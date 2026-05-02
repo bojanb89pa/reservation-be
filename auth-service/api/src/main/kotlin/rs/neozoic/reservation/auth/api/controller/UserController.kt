@@ -11,8 +11,11 @@ import java.net.URI
 import rs.neozoic.reservation.auth.api.dto.RegisterUserRequest
 import rs.neozoic.reservation.auth.api.dto.UserResponse
 import rs.neozoic.reservation.auth.api.dto.toResponse
+import rs.neozoic.reservation.domain.model.PageRequest
+import rs.neozoic.reservation.domain.model.PageResponse
 import rs.neozoic.reservation.domain.usecase.user.ActivateUserUseCase
 import rs.neozoic.reservation.domain.usecase.user.CreateAdminUserUseCase
+import rs.neozoic.reservation.domain.usecase.user.GetAllUsersUseCase
 import rs.neozoic.reservation.domain.usecase.user.GetUserByEmailUseCase
 import rs.neozoic.reservation.domain.usecase.user.RegisterUserUseCase
 
@@ -23,7 +26,8 @@ class UserController(
     private val registerUserUseCase: RegisterUserUseCase,
     private val createAdminUserUseCase: CreateAdminUserUseCase,
     private val activateUserUseCase: ActivateUserUseCase,
-    private val getUserByEmailUseCase: GetUserByEmailUseCase
+    private val getUserByEmailUseCase: GetUserByEmailUseCase,
+    private val getAllUsersUseCase: GetAllUsersUseCase
 ) {
 
     @Operation(summary = "Register a new user account; an activation email is sent to the provided address")
@@ -72,5 +76,27 @@ class UserController(
     fun getUserByEmail(@RequestParam email: String): ResponseEntity<UserResponse> {
         val user = getUserByEmailUseCase(email)
         return user?.let { ResponseEntity.ok(it.toResponse()) } ?: ResponseEntity.notFound().build()
+    }
+
+    @Operation(summary = "List all users (paginated); requires ROLE_ADMIN")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Page of users returned"),
+        ApiResponse(responseCode = "403", description = "Access denied — ROLE_ADMIN required")
+    )
+    @GetMapping("/all")
+    fun getAllUsers(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int
+    ): ResponseEntity<PageResponse<UserResponse>> {
+        val result = getAllUsersUseCase(PageRequest.Offset(page, size))
+        return ResponseEntity.ok(
+            PageResponse(
+                content = result.content.map { it.toResponse() },
+                size = result.size,
+                page = result.page,
+                totalElements = result.totalElements,
+                totalPages = result.totalPages
+            )
+        )
     }
 }

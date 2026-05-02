@@ -19,6 +19,7 @@ class ApiServerSecurityConfig {
             .authorizeHttpRequests { it
                 .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/activate").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/users/all").hasRole("ADMIN")
                 .anyRequest().authenticated() }
             .csrf { it.disable() }
             .oauth2ResourceServer { it.jwt(Customizer. withDefaults()) }
