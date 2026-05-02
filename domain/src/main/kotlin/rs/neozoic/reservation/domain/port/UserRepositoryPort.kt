@@ -1,5 +1,7 @@
 package rs.neozoic.reservation.domain.port
 
+import rs.neozoic.reservation.domain.model.PageRequest
+import rs.neozoic.reservation.domain.model.PageResponse
 import rs.neozoic.reservation.domain.model.User
 import java.util.UUID
 
@@ -16,4 +18,7 @@ interface UserRepositoryPort {
 
     /** Sets the user's enabled flag to true and returns the updated user, or null if not found. */
     fun activateUser(userId: UUID): User?
+
+    /** Returns a paginated slice of all users ordered consistently for the given [pageRequest] strategy. */
+    fun findAllUsers(pageRequest: PageRequest): PageResponse<User>
 }
