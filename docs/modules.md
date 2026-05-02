@@ -41,7 +41,7 @@
 
 **Responsibility:** Use case implementations for the auth service.
 
-**Contents:** `CreateUserUseCase`, `GetUserByEmailUseCase`, `UserDetailsServiceImpl`, `UserDetailsImpl`.
+**Contents:** `CreateUserUseCaseImpl`, `GetUserByEmailUseCaseImpl`, `UserDetailsServiceImpl`, `UserDetailsImpl`.
 
 **Allowed dependencies:** Spring (`@Service`, `PasswordEncoder`), `:domain`.
 **Forbidden:** `jakarta.persistence.*`, Spring Web annotations, direct injection of `:data` adapter classes.
@@ -85,7 +85,7 @@
 
 **Responsibility:** Use case implementations for the resource service.
 
-**Contents:** `CreateBusinessUseCase`, `GetBusinessUseCase`, `CreateReservationUseCase`, `GetReservationUseCase`.
+**Contents:** `CreateBusinessUseCaseImpl`, `GetBusinessUseCaseImpl`, `CreateReservationUseCaseImpl`, `GetReservationUseCaseImpl`.
 
 **Allowed dependencies:** Spring (`@Service`), `:domain`.
 **Forbidden:** `jakarta.persistence.*`, Spring Web annotations, direct injection of `:data` adapter classes.

@@ -18,7 +18,7 @@ class CreateReservationUseCaseTest {
 
     private val reservationRepository: ReservationRepositoryPort = mock()
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val createReservationUseCase = CreateReservationUseCase(reservationRepository, businessRepository)
+    private val createReservationUseCase = CreateReservationUseCaseImpl(reservationRepository, businessRepository)
 
     private fun reservation(
         id: UUID? = null,

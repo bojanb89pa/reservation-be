@@ -65,7 +65,7 @@ Each service owns its own PostgreSQL database — no cross-service DB calls:
 
 - **One class, one responsibility.** No god objects — a class handling more than one use case is a design smell.
 - Use case interfaces (in `:domain`): `VerbNounUseCase` (e.g., `CreateBusinessUseCase`, `GetReservationUseCase`)
-- Use case implementations (in `:application`): same name, different package; use import alias to disambiguate
+- Use case implementations (in `:application`): interface name + `Impl` suffix (e.g., `CreateBusinessUseCaseImpl`)
 - Repository ports (in `:domain/port/`): `NounRepositoryPort` (e.g., `BusinessRepositoryPort`)
 - Repository adapters (in `:data`): `NounRepositoryAdapter` (e.g., `BusinessRepositoryAdapter`)
 - Each use case interface declares **exactly one** `operator fun invoke(...)` method
@@ -77,7 +77,7 @@ Unit tests live in `:application` submodules only. Use **Mockito-Kotlin** (`mock
 ```kotlin
 class CreateBusinessUseCaseTest {
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val useCase = CreateBusinessUseCase(businessRepository)
+    private val useCase = CreateBusinessUseCaseImpl(businessRepository)
 
     @Test
     fun `invoke delegates to repository and returns result`() {

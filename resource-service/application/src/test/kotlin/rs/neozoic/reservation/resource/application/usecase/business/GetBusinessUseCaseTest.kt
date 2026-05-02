@@ -13,7 +13,7 @@ import kotlin.test.assertNull
 class GetBusinessUseCaseTest {
 
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val getBusinessUseCase = GetBusinessUseCase(businessRepository)
+    private val getBusinessUseCase = GetBusinessUseCaseImpl(businessRepository)
 
     @Test
     fun `execute delegates to repository with given id`() {

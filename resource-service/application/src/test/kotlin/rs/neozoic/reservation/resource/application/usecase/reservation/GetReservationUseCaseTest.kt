@@ -13,7 +13,7 @@ import kotlin.test.assertEquals
 class GetReservationUseCaseTest {
 
     private val reservationRepository: ReservationRepositoryPort = mock()
-    private val getReservationUseCase = GetReservationUseCase(reservationRepository)
+    private val getReservationUseCase = GetReservationUseCaseImpl(reservationRepository)
 
     @Test
     fun `execute delegates to repository and returns result`() {

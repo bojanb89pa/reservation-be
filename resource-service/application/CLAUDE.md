@@ -10,23 +10,23 @@ Orchestration layer for the resource service. Implements use case interfaces dec
 
 | Class | Implements |
 |---|---|
-| `usecase/business/CreateBusinessUseCase` | `domain.usecase.business.CreateBusinessUseCase` |
-| `usecase/business/GetBusinessUseCase` | `domain.usecase.business.GetBusinessUseCase` |
-| `usecase/reservation/CreateReservationUseCase` | `domain.usecase.reservation.CreateReservationUseCase` |
-| `usecase/reservation/GetReservationUseCase` | `domain.usecase.reservation.GetReservationUseCase` |
+| `usecase/business/CreateBusinessUseCaseImpl` | `domain.usecase.business.CreateBusinessUseCase` |
+| `usecase/business/GetBusinessUseCaseImpl` | `domain.usecase.business.GetBusinessUseCase` |
+| `usecase/reservation/CreateReservationUseCaseImpl` | `domain.usecase.reservation.CreateReservationUseCase` |
+| `usecase/reservation/GetReservationUseCaseImpl` | `domain.usecase.reservation.GetReservationUseCase` |
 
 ## Use Case Implementation Pattern
 
 - Annotate the implementation class with `@Service` — no additional interface needed in this layer.
-- Use a Kotlin import alias to resolve the name collision between the domain interface and the implementation class:
+- Name the class with the `Impl` suffix to distinguish it from the domain interface without needing an import alias:
 
 ```kotlin
-import rs.neozoic.reservation.domain.usecase.business.CreateBusinessUseCase as CreateBusinessUseCasePort
+import rs.neozoic.reservation.domain.usecase.business.CreateBusinessUseCase
 
 @Service
-class CreateBusinessUseCase(
+class CreateBusinessUseCaseImpl(
     private val businessRepository: BusinessRepositoryPort
-) : CreateBusinessUseCasePort {
+) : CreateBusinessUseCase {
     override operator fun invoke(business: Business): Business? =
         businessRepository.createBusiness(business)
 }
@@ -63,7 +63,7 @@ Tests live in `src/test/kotlin/` mirroring the source package path. Use **Mockit
 ```kotlin
 class CreateBusinessUseCaseTest {
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val useCase = CreateBusinessUseCase(businessRepository)
+    private val useCase = CreateBusinessUseCaseImpl(businessRepository)
 
     @Test
     fun `execute delegates to repository and returns result`() {
@@ -91,7 +91,7 @@ For use cases that inject multiple ports, pass all of them in the constructor:
 class CreateReservationUseCaseTest {
     private val reservationRepository: ReservationRepositoryPort = mock()
     private val businessRepository: BusinessRepositoryPort = mock()
-    private val useCase = CreateReservationUseCase(reservationRepository, businessRepository)
+    private val useCase = CreateReservationUseCaseImpl(reservationRepository, businessRepository)
     ...
 }
 ```

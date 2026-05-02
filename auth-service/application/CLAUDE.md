@@ -10,8 +10,8 @@ Orchestration layer for the auth service. Implements use case interfaces declare
 
 | Class | Implements |
 |---|---|
-| `usecase/user/CreateUserUseCase` | `domain.usecase.user.CreateUserUseCase` |
-| `usecase/user/GetUserByEmailUseCase` | `domain.usecase.user.GetUserByEmailUseCase` |
+| `usecase/user/CreateUserUseCaseImpl` | `domain.usecase.user.CreateUserUseCase` |
+| `usecase/user/GetUserByEmailUseCaseImpl` | `domain.usecase.user.GetUserByEmailUseCase` |
 
 Supporting Spring Security integration:
 - `UserDetailsServiceImpl` — implements `UserDetailsService`; delegates to `GetUserByEmailUseCase`
@@ -20,15 +20,15 @@ Supporting Spring Security integration:
 ## Use Case Implementation Pattern
 
 - Annotate the implementation class with `@Service` — no additional interface needed in this layer.
-- Use a Kotlin import alias to resolve the name collision between the domain interface and the implementation class:
+- Name the class with the `Impl` suffix to distinguish it from the domain interface without needing an import alias:
 
 ```kotlin
-import rs.neozoic.reservation.domain.usecase.user.CreateUserUseCase as CreateUserUseCasePort
+import rs.neozoic.reservation.domain.usecase.user.CreateUserUseCase
 
 @Service
-class CreateUserUseCase(
+class CreateUserUseCaseImpl(
     private val userRepository: UserRepositoryPort
-) : CreateUserUseCasePort {
+) : CreateUserUseCase {
     override operator fun invoke(user: User): User? =
         userRepository.createUser(user)
 }
@@ -65,7 +65,7 @@ Tests live in `src/test/kotlin/` mirroring the source package path. Use **Mockit
 ```kotlin
 class CreateUserUseCaseTest {
     private val userRepository: UserRepositoryPort = mock()
-    private val useCase = CreateUserUseCase(userRepository)
+    private val useCase = CreateUserUseCaseImpl(userRepository)
 
     @Test
     fun `invoke delegates to repository and returns result`() {

@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service
 import rs.neozoic.reservation.domain.model.Reservation
 import rs.neozoic.reservation.domain.port.BusinessRepositoryPort
 import rs.neozoic.reservation.domain.port.ReservationRepositoryPort
-import rs.neozoic.reservation.domain.usecase.reservation.CreateReservationUseCase as CreateReservationUseCasePort
+import rs.neozoic.reservation.domain.usecase.reservation.CreateReservationUseCase
 import java.util.UUID
 
 /**
@@ -13,10 +13,10 @@ import java.util.UUID
  * TODO: replace with a typed domain exception.
  */
 @Service
-class CreateReservationUseCase(
+class CreateReservationUseCaseImpl(
     private val reservationRepository: ReservationRepositoryPort,
     private val businessRepository: BusinessRepositoryPort
-) : CreateReservationUseCasePort {
+) : CreateReservationUseCase {
     override operator fun invoke(userId: UUID, businessId: UUID, reservation: Reservation): Reservation {
         require(businessRepository.existByPublicId(businessId)) { "Business not found" }
 

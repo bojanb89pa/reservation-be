@@ -3,12 +3,12 @@ package rs.neozoic.reservation.auth.application.usecase.user
 import org.springframework.stereotype.Service
 import rs.neozoic.reservation.domain.model.User
 import rs.neozoic.reservation.domain.port.UserRepositoryPort
-import rs.neozoic.reservation.domain.usecase.user.GetUserByEmailUseCase as GetUserByEmailUseCasePort
+import rs.neozoic.reservation.domain.usecase.user.GetUserByEmailUseCase
 
 @Service
-class GetUserByEmailUseCase(
+class GetUserByEmailUseCaseImpl(
     private val userRepositoryPort: UserRepositoryPort
-) : GetUserByEmailUseCasePort {
+) : GetUserByEmailUseCase {
     override operator fun invoke(email: String): User? =
         userRepositoryPort.findByEmail(email)
 }
