@@ -7,7 +7,10 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import rs.neozoic.reservation.domain.model.Business
+import rs.neozoic.reservation.domain.model.PageRequest
+import rs.neozoic.reservation.domain.model.PageResponse
 import rs.neozoic.reservation.domain.usecase.business.CreateBusinessUseCase
+import rs.neozoic.reservation.domain.usecase.business.GetAllBusinessesUseCase
 import rs.neozoic.reservation.domain.usecase.business.GetBusinessUseCase
 import java.util.*
 
@@ -16,8 +19,21 @@ import java.util.*
 @RequestMapping("/api/businesses")
 class BusinessController(
     private val createBusinessUseCase: CreateBusinessUseCase,
-    private val getBusinessUseCase: GetBusinessUseCase
+    private val getBusinessUseCase: GetBusinessUseCase,
+    private val getAllBusinessesUseCase: GetAllBusinessesUseCase
 ) {
+
+    @Operation(summary = "List all businesses (paginated); requires ROLE_ADMIN")
+    @ApiResponses(
+        ApiResponse(responseCode = "200", description = "Page of businesses returned"),
+        ApiResponse(responseCode = "403", description = "Access denied — ROLE_ADMIN required")
+    )
+    @GetMapping("/all")
+    fun getAllBusinesses(
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "20") size: Int
+    ): ResponseEntity<PageResponse<Business>> =
+        ResponseEntity.ok(getAllBusinessesUseCase(PageRequest.Offset(page, size)))
 
     @Operation(summary = "Create a new business")
     @ApiResponse(responseCode = "200", description = "Business created")

@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.annotation.Order
 import org.springframework.core.convert.converter.Converter
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -29,9 +30,7 @@ class ResourceServerSecurityConfig {
         return http
             .securityMatcher("/api/**")
             .authorizeHttpRequests {
-                it
-//                .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                    .anyRequest().authenticated()
+                it.anyRequest().authenticated()
             }
 //            .csrf { it.disable() }
             .oauth2ResourceServer { it.jwt { jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter())} }
