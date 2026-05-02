@@ -17,6 +17,7 @@ dependencies {
     implementation(project(":domain"))
 
     implementation((libs.spring.boot.starter.data.jpa))
+    implementation(libs.spring.boot.starter.mail)
 
     testImplementation(kotlin("test"))
 }

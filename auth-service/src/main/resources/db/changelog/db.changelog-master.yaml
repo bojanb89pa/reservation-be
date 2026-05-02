@@ -103,3 +103,55 @@ databaseChangeLog:
             referencedColumnNames: id
             constraintName: fk_user_roles_users
             onDelete: CASCADE
+  - changeSet:
+      id: 3
+      author: Bojan Bogojevic
+      changes:
+        - createTable:
+            tableName: activation_tokens
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: public_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: token
+                  type: VARCHAR(512)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: expires_at
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: used
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+        - addForeignKeyConstraint:
+            baseTableName: activation_tokens
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: public_id
+            constraintName: fk_activation_tokens_users
+            onDelete: CASCADE
