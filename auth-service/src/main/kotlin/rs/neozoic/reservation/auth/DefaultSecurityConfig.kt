@@ -40,7 +40,7 @@ class DefaultSecurityConfig {
                 .requestMatchers("/login", "/public/**", "/error").permitAll()
                 .anyRequest().authenticated()
             }
-            .formLogin(Customizer.withDefaults())
+            .formLogin { form -> form.loginPage("/login") }
             .cors(Customizer.withDefaults())
             .csrf { csrf ->
                 csrf.ignoringRequestMatchers(

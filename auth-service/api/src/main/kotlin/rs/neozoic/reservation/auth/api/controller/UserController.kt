@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.net.URI
 import rs.neozoic.reservation.auth.api.dto.RegisterUserRequest
 import rs.neozoic.reservation.auth.api.dto.UserResponse
 import rs.neozoic.reservation.auth.api.dto.toResponse
@@ -47,13 +48,20 @@ class UserController(
 
     @Operation(summary = "Activate a user account using the token from the activation email")
     @ApiResponses(
-        ApiResponse(responseCode = "200", description = "Account activated"),
-        ApiResponse(responseCode = "400", description = "Token not found or already used"),
-        ApiResponse(responseCode = "410", description = "Token expired")
+        ApiResponse(responseCode = "302", description = "Redirects to /login — activated=true on success, error=activation_failed or error=activation_expired on failure")
     )
     @GetMapping("/activate")
-    fun activate(@RequestParam token: String): ResponseEntity<UserResponse> =
-        ResponseEntity.ok(activateUserUseCase(token).toResponse())
+    fun activate(@RequestParam token: String): ResponseEntity<Void> {
+        return try {
+            activateUserUseCase(token)
+            ResponseEntity.status(302).location(URI.create("/login?activated=true")).build()
+        } catch (e: IllegalArgumentException) {
+            ResponseEntity.status(302).location(URI.create("/login?error=activation_failed")).build()
+        } catch (e: IllegalStateException) {
+            val errorParam = if (e.message?.contains("expired") == true) "activation_expired" else "activation_failed"
+            ResponseEntity.status(302).location(URI.create("/login?error=$errorParam")).build()
+        }
+    }
 
     @Operation(summary = "Look up a user by email")
     @ApiResponses(
