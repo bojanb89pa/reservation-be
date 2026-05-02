@@ -16,6 +16,9 @@ dependencies {
     implementation(libs.spring.boot.starter.security)
 
     testImplementation(kotlin("test"))
+    testImplementation(libs.kotlin.test.junit5)
+    testImplementation(libs.mockito.kotlin)
+    testRuntimeOnly(libs.junit.platform.launcher)
 }
 
 tasks.test {
