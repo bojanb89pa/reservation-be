@@ -7,6 +7,7 @@ import rs.neozoic.reservation.auth.data.model.mapper.toEntity
 import rs.neozoic.reservation.auth.data.repository.UserRepository
 import rs.neozoic.reservation.domain.model.User
 import rs.neozoic.reservation.domain.port.UserRepositoryPort
+import java.util.UUID
 
 @Repository
 class UserRepositoryAdapter(
@@ -29,4 +30,8 @@ class UserRepositoryAdapter(
         return userRepository.findByEmail(email)?.toDomainInternal()
     }
 
+    override fun activateUser(userId: UUID): User? {
+        val entity = userRepository.findByPublicId(userId) ?: return null
+        return userRepository.save(entity.copy(activated = true, enabled = true)).toDomain()
+    }
 }

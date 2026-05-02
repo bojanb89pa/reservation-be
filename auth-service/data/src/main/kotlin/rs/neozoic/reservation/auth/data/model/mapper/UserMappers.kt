@@ -31,7 +31,7 @@ fun User.toEntity(): UserEntity = UserEntity(
     firstName = this.firstName,
     lastName = this.lastName,
     password = this.password,
-    enabled = true,
-    activated = false,
+    enabled = this.enabled ?: false,
+    activated = this.enabled ?: false,
     roles = this.roles
 )
