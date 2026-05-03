@@ -29,6 +29,6 @@ data class ReservationEntity(
     val updatedAt: LocalDateTime = LocalDateTime.now(),
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "business_id", nullable = false)
-    val business: BusinessEntity
+    @JoinColumn(name = "resource_id", nullable = false)
+    val resource: ResourceEntity
 )
