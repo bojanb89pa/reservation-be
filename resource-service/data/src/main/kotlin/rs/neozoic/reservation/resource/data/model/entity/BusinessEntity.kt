@@ -17,9 +17,6 @@ data class BusinessEntity(
     @Column(name = "name", nullable = false)
     val name: String,
 
-    @Column(name = "min_reservation_period", nullable = false)
-    val minReservationDuration: Int = 30,  // in minutes
-
     @Column(name = "created_at", nullable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
 

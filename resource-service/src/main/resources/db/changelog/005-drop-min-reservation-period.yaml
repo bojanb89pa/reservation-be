@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005
+      author: Bojan Bogojevic
+      changes:
+        - dropColumn:
+            tableName: businesses
+            columnName: min_reservation_period
