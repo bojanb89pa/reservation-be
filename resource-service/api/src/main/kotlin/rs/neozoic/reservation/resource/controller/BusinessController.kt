@@ -23,10 +23,9 @@ class BusinessController(
     private val getAllBusinessesUseCase: GetAllBusinessesUseCase
 ) {
 
-    @Operation(summary = "List all businesses (paginated); requires ROLE_ADMIN")
+    @Operation(summary = "List all businesses (paginated)")
     @ApiResponses(
-        ApiResponse(responseCode = "200", description = "Page of businesses returned"),
-        ApiResponse(responseCode = "403", description = "Access denied — ROLE_ADMIN required")
+        ApiResponse(responseCode = "200", description = "Page of businesses returned")
     )
     @GetMapping("/all")
     fun getAllBusinesses(
