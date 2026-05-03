@@ -21,7 +21,7 @@ class GetReservationUseCaseTest {
         val expected = Reservation(
             id = id,
             userId = UUID.randomUUID(),
-            businessId = UUID.randomUUID(),
+            resourceId = UUID.randomUUID(),
             startTime = LocalDateTime.of(2026, 5, 10, 10, 0),
             endTime = LocalDateTime.of(2026, 5, 10, 11, 0),
         )

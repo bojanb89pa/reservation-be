@@ -15,25 +15,25 @@ import java.util.*
 
 @Tag(name = "Reservations", description = "Reservation booking and retrieval")
 @RestController
-@RequestMapping("/api/businesses/{businessId}/reservations")
+@RequestMapping("/api/resources/{resourceId}/reservations")
 class ReservationController(
     private val createReservationUseCase: CreateReservationUseCase,
     private val getReservationUseCase: GetReservationUseCase
 ) {
 
-    @Operation(summary = "Book a reservation at a business")
+    @Operation(summary = "Book a reservation for a resource")
     @ApiResponses(
         ApiResponse(responseCode = "200", description = "Reservation created"),
-        ApiResponse(responseCode = "400", description = "Business not found"),
+        ApiResponse(responseCode = "400", description = "Resource not found or slot outside availability"),
         ApiResponse(responseCode = "401", description = "Authentication required")
     )
     @PostMapping
     fun createReservation(
-        @PathVariable businessId: UUID,
+        @PathVariable resourceId: UUID,
         @AuthenticationPrincipal authUser: AuthenticatedUser,
         @RequestBody reservation: Reservation
     ): ResponseEntity<Reservation> =
-        ResponseEntity.ok(createReservationUseCase(authUser.id, businessId, reservation))
+        ResponseEntity.ok(createReservationUseCase(authUser.id, resourceId, reservation))
 
     @Operation(summary = "Get a reservation by its ID")
     @ApiResponses(

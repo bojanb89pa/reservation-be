@@ -5,3 +5,7 @@ databaseChangeLog:
       file: db/changelog/002-create-reservation.yaml
   - include:
       file: db/changelog/003-create-availability.yaml
+  - include:
+      file: db/changelog/004-create-resources-and-rules.yaml
+  - include:
+      file: db/changelog/005-drop-min-reservation-period.yaml
